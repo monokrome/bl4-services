@@ -1,141 +1,480 @@
 .page {
-  --background: #fafafa;
-  --foreground: #fff;
-
-  --text-primary: #000;
-  --text-secondary: #666;
-
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-  --button-secondary-border: #ebebeb;
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --accent: #f5a623;
+  --accent-dim: #c4851c;
+  --card-bg: #141414;
+  --card-border: #2a2a2a;
+  --code-bg: #1a1a1a;
+  --text-secondary: #888;
 
   display: flex;
   min-height: 100vh;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   font-family: var(--font-geist-sans);
   background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Stinger Banner */
+.stinger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 100%);
+  color: #000;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.stinger a,
+.stingerButton {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  color: inherit;
+  transition: opacity 0.2s;
+}
+
+.stingerButton {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+.stinger a:hover,
+.stingerButton:hover {
+  opacity: 0.8;
 }
 
 .main {
   display: flex;
-  min-height: 100vh;
   width: 100%;
-  max-width: 800px;
+  max-width: 1000px;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  background-color: var(--foreground);
-  padding: 120px 60px;
+  padding: 60px 24px;
+  gap: 80px;
 }
 
-.intro {
+/* Hero Section */
+.hero {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
+  align-items: center;
+  text-align: center;
   gap: 24px;
+  padding: 60px 0 40px;
 }
 
-.intro h1 {
-  max-width: 320px;
-  font-size: 40px;
-  font-weight: 600;
-  line-height: 48px;
-  letter-spacing: -2.4px;
-  text-wrap: balance;
-  color: var(--text-primary);
+.title {
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: -2px;
+  margin: 0;
 }
 
-.intro p {
-  max-width: 440px;
-  font-size: 18px;
-  line-height: 32px;
-  text-wrap: balance;
+.accent {
+  color: var(--accent);
+  background: linear-gradient(135deg, var(--accent) 0%, #ffcc00 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.tagline {
+  font-size: 20px;
+  line-height: 1.6;
   color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0;
 }
 
-.intro a {
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
+/* CTAs */
 .ctas {
   display: flex;
-  flex-direction: row;
-  width: 100%;
-  max-width: 440px;
   gap: 16px;
-  font-size: 14px;
+  margin-top: 16px;
 }
 
 .ctas a {
-  display: flex;
-  justify-content: center;
+  display: inline-flex;
   align-items: center;
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 128px;
-  border: 1px solid transparent;
-  transition: 0.2s;
+  justify-content: center;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.primary {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 100%);
+  color: #000;
+}
+
+.secondary {
+  background: transparent;
+  border: 2px solid var(--card-border);
+  color: var(--foreground);
+}
+
+@media (hover: hover) {
+  .primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(245, 166, 35, 0.3);
+  }
+
+  .secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+}
+
+/* Section Titles */
+.sectionTitle {
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0 0 32px;
+  text-align: center;
+}
+
+/* Features Grid */
+.features {
+  display: flex;
+  flex-direction: column;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.featureCard,
+.featureCardLink {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 28px;
+  transition: all 0.2s ease;
+}
+
+.featureCard:hover,
+.featureCardLink:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+}
+
+.featureCardLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
   cursor: pointer;
-  width: fit-content;
-  font-weight: 500;
 }
 
-a.primary {
-  background: var(--text-primary);
-  color: var(--background);
-  gap: 8px;
+.featureHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
-a.secondary {
-  border-color: var(--button-secondary-border);
+.featureIcon {
+  width: 24px;
+  height: 24px;
+  color: var(--accent);
+  flex-shrink: 0;
 }
 
-/* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
-    background: var(--button-primary-hover);
-    border-color: transparent;
-  }
-
-  a.secondary:hover {
-    background: var(--button-secondary-hover);
-    border-color: transparent;
-  }
+.featureCard h3,
+.featureCardLink h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--foreground);
 }
 
-@media (max-width: 600px) {
+.featureCard p,
+.featureCardLink p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Quick Start */
+.quickstart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quickstartIntro {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 18px;
+  margin-bottom: 24px;
+}
+
+.downloadButtons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.downloadButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 24px;
+  border-radius: 10px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--foreground);
+  transition: all 0.2s ease;
+  text-decoration: none;
+  min-width: 120px;
+}
+
+.downloadButton:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.downloadName {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.downloadPlatform {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.codeBlock {
+  width: 100%;
+  background: var(--code-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.codeHeader {
+  background: var(--card-border);
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-family: var(--font-geist-mono);
+}
+
+.code {
+  padding: 24px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.8;
+  font-family: var(--font-geist-mono);
+  color: var(--foreground);
+  overflow-x: auto;
+}
+
+/* Contribute Section */
+.contribute {
+  display: flex;
+  flex-direction: column;
+}
+
+.contributeIntro {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 18px;
+  margin: -16px 0 32px;
+  max-width: 600px;
+  align-self: center;
+}
+
+.contributeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.contributeCard {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.2s ease;
+}
+
+.contributeCard:hover {
+  border-color: var(--accent);
+}
+
+.contributeCard h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  color: var(--accent);
+}
+
+.contributeCard p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.contributeCard code {
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-geist-mono);
+  font-size: 13px;
+  color: var(--accent);
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding-top: 40px;
+  border-top: 1px solid var(--card-border);
+}
+
+.disclaimer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-secondary);
+  max-width: 500px;
+  line-height: 1.6;
+  margin: 0 0 8px;
+  padding: 12px 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+}
+
+.links {
+  display: flex;
+  gap: 32px;
+}
+
+.links a {
+  color: var(--text-secondary);
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+
+.links a:hover {
+  color: var(--accent);
+}
+
+.license {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
   .main {
-    padding: 48px 24px;
+    gap: 60px;
+    padding: 40px 20px;
   }
 
-  .intro {
-    gap: 16px;
+  .hero {
+    padding: 40px 0 20px;
   }
 
-  .intro h1 {
-    font-size: 32px;
-    line-height: 40px;
-    letter-spacing: -1.92px;
+  .title {
+    font-size: 40px;
+    letter-spacing: -1px;
+  }
+
+  .tagline {
+    font-size: 17px;
+  }
+
+  .ctas {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .ctas a {
+    width: 100%;
+  }
+
+  .sectionTitle {
+    font-size: 26px;
+  }
+
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .contributeGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .code {
+    font-size: 12px;
+    padding: 16px;
+  }
+
+  .downloadButtons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .downloadButton {
+    width: 100%;
+  }
+
+  .links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
+/* Light mode support */
+@media (prefers-color-scheme: light) {
+  .page {
+    --background: #fafafa;
+    --foreground: #1a1a1a;
+    --accent: #d4830c;
+    --accent-dim: #b36f0a;
+    --card-bg: #ffffff;
+    --card-border: #e5e5e5;
+    --code-bg: #f5f5f5;
+    --text-secondary: #666;
   }
 
-  .page {
-    --background: #000;
-    --foreground: #000;
+  .primary {
+    color: #fff;
+  }
 
-    --text-primary: #ededed;
-    --text-secondary: #999;
+  .stinger {
+    color: #fff;
+  }
 
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-    --button-secondary-border: #1a1a1a;
+  .codeHeader {
+    background: #e8e8e8;
   }
 }
