@@ -1,16 +1,8 @@
-import { ArrowLeft, Download, Terminal, Edit3, Search, Settings, Database } from "lucide-react";
+import { ArrowLeft, Terminal, Edit3, Search, Settings, Database } from "lucide-react";
 import Link from "next/link";
 import styles from "./page.module.css";
-
-const RELEASE_BASE = "https://github.com/monokrome/bl4/releases/latest/download";
-
-const DOWNLOADS = [
-  { name: "bl4.exe", label: "Windows", arch: "" },
-  { name: "bl4-macos-aarch64", label: "macOS", arch: "Apple Silicon" },
-  { name: "bl4-macos-x86_64", label: "macOS", arch: "Intel" },
-  { name: "bl4-linux-x86_64", label: "Linux", arch: "x86_64" },
-  { name: "bl4-linux-aarch64", label: "Linux", arch: "ARM64" },
-];
+import OsPathSelector from "./OsPathSelector";
+import DownloadSelector from "./DownloadSelector";
 
 export default function ToolsPage() {
   return (
@@ -33,21 +25,7 @@ export default function ToolsPage() {
 
         <section className={styles.downloads}>
           <h2>Download</h2>
-          <div className={styles.downloadGrid}>
-            {DOWNLOADS.map((dl) => (
-              <a
-                key={dl.name}
-                href={`${RELEASE_BASE}/${dl.name}`}
-                className={styles.downloadCard}
-              >
-                <Download size={24} />
-                <div className={styles.downloadInfo}>
-                  <span className={styles.downloadName}>{dl.label}</span>
-                  {dl.arch && <span className={styles.downloadPlatform}>{dl.arch}</span>}
-                </div>
-              </a>
-            ))}
-          </div>
+          <DownloadSelector />
         </section>
 
         <section className={styles.features}>
@@ -135,10 +113,10 @@ export default function ToolsPage() {
               <div className={styles.stepContent}>
                 <h3>Locate Your Saves</h3>
                 <p>
-                  Save files are typically found in your Steam userdata folder
-                  under the Borderlands 4 app ID.
+                  Save files are located in your Documents folder under the
+                  Borderlands 4 save directory.
                 </p>
-                <code>~/.steam/userdata/[id]/[appid]/remote/</code>
+                <OsPathSelector />
               </div>
             </div>
 

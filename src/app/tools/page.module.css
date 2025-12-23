@@ -74,51 +74,127 @@
   text-align: center;
 }
 
-.downloadGrid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  max-width: 700px;
+/* Download Selector */
+.downloadSelector {
+  max-width: 420px;
   margin: 0 auto;
 }
 
-.downloadCard {
+.osCards {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+}
+
+.osCard {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
-  background: var(--card-bg);
+  gap: 8px;
+  padding: 14px 24px;
+  background: transparent;
   border: 1px solid var(--card-border);
-  color: var(--foreground);
-  border-radius: 10px;
-  text-decoration: none;
+  border-bottom: none;
+  color: var(--text-secondary);
+  cursor: pointer;
   transition: all 0.2s;
-  min-width: 160px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
 }
 
-.downloadCard:hover {
-  border-color: var(--accent);
-  transform: translateY(-2px);
+.osCard:first-child {
+  border-radius: 10px 0 0 0;
 }
 
-.downloadCard svg {
+.osCard:last-child {
+  border-radius: 0 10px 0 0;
+  border-left: none;
+}
+
+.osCard:not(:first-child):not(:last-child) {
+  border-left: none;
+}
+
+.osCard:hover {
+  color: var(--foreground);
+  background: var(--code-bg);
+}
+
+.osCardActive {
+  color: var(--foreground);
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--card-bg);
+  margin-bottom: -1px;
+  position: relative;
+  z-index: 1;
+}
+
+.osCardActive svg {
   color: var(--accent);
 }
 
-.downloadInfo {
+.archSection {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 0 0 10px 10px;
 }
 
-.downloadName {
-  font-size: 15px;
-  font-weight: 600;
+.archTabs {
+  display: flex;
+  gap: 0;
+  background: var(--code-bg);
+  border-radius: 6px;
+  padding: 3px;
 }
 
-.downloadPlatform {
-  font-size: 12px;
+.archTab {
+  padding: 6px 14px;
+  background: transparent;
+  border: none;
   color: var(--text-secondary);
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.archTab:hover {
+  color: var(--foreground);
+}
+
+.archTabActive {
+  background: var(--card-border);
+  color: var(--foreground);
+}
+
+.downloadButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: var(--accent);
+  color: #000;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.downloadButton:hover {
+  background: var(--accent-dim);
+}
+
+.archLabel {
+  font-weight: 400;
+  opacity: 0.8;
 }
 
 .altInstall {
@@ -274,6 +350,69 @@
   color: var(--foreground);
 }
 
+/* OS Selector */
+.osSelector {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.osTabs {
+  display: flex;
+  gap: 0;
+}
+
+.osTab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid var(--card-border);
+  border-bottom: none;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.osTab:first-child {
+  border-radius: 6px 0 0 0;
+}
+
+.osTab:last-child {
+  border-radius: 0 6px 0 0;
+  border-left: none;
+}
+
+.osTab:hover {
+  color: var(--foreground);
+  background: var(--code-bg);
+}
+
+.osTabActive {
+  background: var(--code-bg);
+  color: var(--foreground);
+  border-bottom: 1px solid var(--code-bg);
+  margin-bottom: -1px;
+  position: relative;
+  z-index: 1;
+}
+
+.osPath {
+  display: block;
+  background: var(--code-bg);
+  padding: 10px 14px;
+  border-radius: 0 6px 6px 6px;
+  border: 1px solid var(--card-border);
+  font-family: var(--font-geist-mono);
+  font-size: 13px;
+  color: var(--foreground);
+  overflow-x: auto;
+  word-break: break-all;
+}
+
 /* Library */
 .library {
   text-align: center;
@@ -344,13 +483,34 @@
     font-size: 32px;
   }
 
-  .downloadGrid {
+  .osCards {
     flex-direction: column;
   }
 
-  .downloadCard {
-    width: 100%;
-    justify-content: center;
+  .osCard {
+    border-radius: 0;
+    border-left: 1px solid var(--card-border);
+  }
+
+  .osCard:first-child {
+    border-radius: 10px 10px 0 0;
+  }
+
+  .osCard:last-child {
+    border-radius: 0;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .osCardActive {
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .osCardActive:last-child {
+    border-bottom: 1px solid var(--card-bg);
+  }
+
+  .archSection {
+    border-radius: 0 0 10px 10px;
   }
 
   .libraryOptions {
