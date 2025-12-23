@@ -48,9 +48,6 @@ export default function ToolsPage() {
               </a>
             ))}
           </div>
-          <p className={styles.altInstall}>
-            Or install via cargo: <code>cargo install bl4-cli</code>
-          </p>
         </section>
 
         <section className={styles.features}>
