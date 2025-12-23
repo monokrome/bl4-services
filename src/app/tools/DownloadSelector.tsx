@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type FC } from "react";
 import { Download } from "lucide-react";
 import styles from "./page.module.css";
 
@@ -8,7 +8,7 @@ const RELEASE_BASE = "https://github.com/monokrome/bl4/releases/latest/download"
 
 type OS = "windows" | "macos" | "linux";
 
-const OS_CONFIG = {
+const OS_CONFIG: Record<OS, { label: string; archs: { name: string; file: string }[] }> = {
   windows: {
     label: "Windows",
     archs: [{ name: "x64", file: "bl4.exe" }],
@@ -53,7 +53,7 @@ function LinuxIcon() {
   );
 }
 
-const OS_ICONS: Record<OS, () => JSX.Element> = {
+const OS_ICONS: Record<OS, FC> = {
   windows: WindowsIcon,
   macos: AppleIcon,
   linux: LinuxIcon,
