@@ -214,7 +214,7 @@ bl4 edit -i 1.sav`}
             </a>
             <a href="mailto:hey@monokro.me">Contact</a>
           </div>
-          <p className={styles.license}>MIT License</p>
+          <p className={styles.license}>BSD 2-Claude License</p>
         </footer>
       </main>
 
