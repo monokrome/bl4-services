@@ -15,6 +15,7 @@ interface Item {
   name: string | null;
   manufacturer: string | null;
   weapon_type: string | null;
+  item_type: string | null;
   element: string | null;
   rarity: string | null;
   level: number | null;
@@ -105,7 +106,7 @@ export default function ItemsPage() {
                 >
                   <div className={styles.itemHeader}>
                     <span className={styles.itemName}>
-                      {item.name || "Unknown Item"}
+                      {item.name || (item.item_type ? `Unknown ${item.item_type}` : "Unknown Item")}
                     </span>
                     <div className={styles.itemActions}>
                       {item.level && (
