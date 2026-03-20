@@ -131,7 +131,7 @@ export default function SaveUpload({ isOpen, onClose }: SaveUploadProps) {
     try {
       // Load WASM
       setStage("loading-wasm");
-      const bl4 = await import("@monokrome/bl4");
+      const bl4 = await import("borderlands");
       await bl4.default();
 
       // Read file
