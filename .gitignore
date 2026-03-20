@@ -15,3 +15,5 @@ next-env.d.ts
 # Non-git hidden file patterns
 .*
 !.git*
+.vercel
+.env*.local

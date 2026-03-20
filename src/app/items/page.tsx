@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { ArrowLeft, Loader2, ChevronLeft, ChevronRight, Search, Upload } from "lucide-react";
+import { ArrowLeft, Loader2, ChevronLeft, ChevronRight, Search, Upload, Pencil } from "lucide-react";
 import Link from "next/link";
 import SerialDecode from "@/components/SerialDecode";
 import SaveUpload from "@/components/SaveUpload";
+import ItemEditModal from "@/components/ItemEditModal";
 import styles from "./page.module.css";
 
 const API_BASE = "https://items.bl4.dev";
@@ -37,6 +38,7 @@ export default function ItemsPage() {
   const [error, setError] = useState<string | null>(null);
   const [decodeOpen, setDecodeOpen] = useState(false);
   const [uploadOpen, setUploadOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<Item | null>(null);
 
   const fetchItems = useCallback(async () => {
     setLoading(true);
@@ -105,9 +107,18 @@ export default function ItemsPage() {
                     <span className={styles.itemName}>
                       {item.name || "Unknown Item"}
                     </span>
-                    {item.level && (
-                      <span className={styles.itemLevel}>Lv.{item.level}</span>
-                    )}
+                    <div className={styles.itemActions}>
+                      {item.level && (
+                        <span className={styles.itemLevel}>Lv.{item.level}</span>
+                      )}
+                      <button
+                        className={styles.editButton}
+                        onClick={() => setEditingItem(item)}
+                        title="Edit item"
+                      >
+                        <Pencil size={14} />
+                      </button>
+                    </div>
                   </div>
                   <div className={styles.itemMeta}>
                     {item.manufacturer && (
@@ -175,6 +186,15 @@ export default function ItemsPage() {
         isOpen={uploadOpen}
         onClose={() => setUploadOpen(false)}
       />
+
+      {editingItem && (
+        <ItemEditModal
+          item={editingItem}
+          isOpen={true}
+          onClose={() => setEditingItem(null)}
+          onSaved={() => fetchItems()}
+        />
+      )}
     </div>
   );
 }
