@@ -2,7 +2,7 @@ app = "bl4-community"
 primary_region = "sjc"
 
 [build]
-  image = "monokrome/bl4-community:latest"
+  image = "ghcr.io/monokrome/bl4-community:latest"
 
 [http_service]
   internal_port = 3030
