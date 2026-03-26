@@ -266,18 +266,18 @@
 }
 
 /* Element colors */
-[data-element="fire"] { color: #ff5722; }
-[data-element="shock"] { color: #03a9f4; }
-[data-element="corrosive"] { color: #8bc34a; }
-[data-element="cryo"] { color: #00bcd4; }
-[data-element="radiation"] { color: #ffeb3b; }
+.table [data-element="fire"] { color: #ff5722; }
+.table [data-element="shock"] { color: #03a9f4; }
+.table [data-element="corrosive"] { color: #8bc34a; }
+.table [data-element="cryo"] { color: #00bcd4; }
+.table [data-element="radiation"] { color: #ffeb3b; }
 
 /* Rarity colors */
-[data-rarity="legendary"] { color: #ff9800; }
-[data-rarity="epic"] { color: #ce93d8; }
-[data-rarity="rare"] { color: #64b5f6; }
-[data-rarity="uncommon"] { color: #81c784; }
-[data-rarity="common"] { color: #9e9e9e; }
+.table [data-rarity="legendary"] { color: #ff9800; }
+.table [data-rarity="epic"] { color: #ce93d8; }
+.table [data-rarity="rare"] { color: #64b5f6; }
+.table [data-rarity="uncommon"] { color: #81c784; }
+.table [data-rarity="common"] { color: #9e9e9e; }
 
 /* Pagination */
 .pagination {
