@@ -7,6 +7,8 @@
   --card-border: #2a2a2a;
   --code-bg: #1a1a1a;
   --text-secondary: #888;
+  --frozen-col1-width: 280px;
+  --frozen-col2-width: 200px;
 
   display: flex;
   flex-direction: column;
@@ -82,6 +84,9 @@
   padding: 12px 24px;
   border-bottom: 1px solid var(--card-border);
   background: var(--code-bg);
+  position: sticky;
+  top: 65px;
+  z-index: 9;
 }
 
 .filterInput {
@@ -127,10 +132,8 @@
 /* Main content */
 .main {
   flex: 1;
-  padding: 0 24px 120px;
-  max-width: 1400px;
+  padding: 0 0 120px;
   width: 100%;
-  margin: 0 auto;
   transition: padding-bottom 0.3s ease;
 }
 
@@ -172,19 +175,13 @@
 /* Table */
 .tableWrapper {
   overflow-x: auto;
-  margin-top: 16px;
 }
 
 .table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 14px;
-}
-
-.table thead {
-  position: sticky;
-  top: 65px;
-  z-index: 5;
 }
 
 .table th {
@@ -198,6 +195,9 @@
   background: var(--background);
   border-bottom: 1px solid var(--card-border);
   white-space: nowrap;
+  position: sticky;
+  top: 110px;
+  z-index: 4;
 }
 
 .table td {
@@ -207,19 +207,44 @@
   white-space: nowrap;
 }
 
+/* Frozen columns */
+.frozenCol1 {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: var(--background);
+  min-width: var(--frozen-col1-width);
+  max-width: var(--frozen-col1-width);
+  border-right: 1px solid var(--card-border);
+}
+
+.frozenCol2 {
+  position: sticky;
+  left: var(--frozen-col1-width);
+  z-index: 3;
+  background: var(--background);
+  min-width: var(--frozen-col2-width);
+  border-right: 1px solid var(--card-border);
+}
+
+/* Frozen header corners get highest z-index */
+.table thead .frozenCol1,
+.table thead .frozenCol2 {
+  z-index: 6;
+}
+
+/* Frozen columns in body rows inherit row hover */
+.row:hover .frozenCol1,
+.row:hover .frozenCol2 {
+  background: var(--card-bg);
+}
+
 .row {
-  cursor: pointer;
   transition: background 0.15s;
 }
 
 .row:hover {
   background: var(--card-bg);
-}
-
-.nameCell {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
 }
 
 .itemName {
@@ -231,10 +256,10 @@
   font-size: 11px;
   font-family: var(--font-geist-mono);
   color: var(--text-secondary);
-  background: var(--code-bg);
-  padding: 3px 6px;
-  border-radius: 3px;
-  width: fit-content;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: calc(var(--frozen-col1-width) - 24px);
 }
 
 .actionsCol {
@@ -345,6 +370,11 @@
 
 /* Responsive */
 @media (max-width: 600px) {
+  .page {
+    --frozen-col1-width: 180px;
+    --frozen-col2-width: 140px;
+  }
+
   .header {
     flex-wrap: wrap;
     gap: 12px;
@@ -366,10 +396,6 @@
   .uploadButton {
     order: 2;
     margin-left: auto;
-  }
-
-  .main {
-    padding: 0 8px 100px;
   }
 
   .mainWithPanel {

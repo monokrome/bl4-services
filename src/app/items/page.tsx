@@ -55,7 +55,7 @@ export default function ItemsPage() {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS);
-  const [expandedSerial, setExpandedSerial] = useState<string | null>(null);
+
 
   const fetchItems = useCallback(async () => {
     setLoading(true);
@@ -173,7 +173,8 @@ export default function ItemsPage() {
               <table className={styles.table}>
                 <thead>
                   <tr>
-                    <th>Name</th>
+                    <th className={styles.frozenCol1}>Serial</th>
+                    <th className={styles.frozenCol2}>Name</th>
                     <th>Type</th>
                     <th>Manufacturer</th>
                     <th>Level</th>
@@ -188,19 +189,14 @@ export default function ItemsPage() {
                       key={item.serial}
                       className={styles.row}
                       data-rarity={item.rarity?.toLowerCase()}
-                      onClick={() =>
-                        setExpandedSerial(
-                          expandedSerial === item.serial ? null : item.serial
-                        )
-                      }
                     >
-                      <td className={styles.nameCell}>
+                      <td className={styles.frozenCol1}>
+                        <code className={styles.serial}>{item.serial}</code>
+                      </td>
+                      <td className={styles.frozenCol2}>
                         <span className={styles.itemName}>
                           {item.name || (item.item_type ? `Unknown ${item.item_type}` : "Unknown Item")}
                         </span>
-                        {expandedSerial === item.serial && (
-                          <code className={styles.serial}>{item.serial}</code>
-                        )}
                       </td>
                       <td>{item.weapon_type || item.item_type || "\u2014"}</td>
                       <td>{item.manufacturer || "\u2014"}</td>
