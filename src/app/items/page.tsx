@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { ArrowLeft, Loader2, ChevronLeft, ChevronRight, Search, Upload, Pencil, X } from "lucide-react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { ArrowLeft, Loader2, ChevronLeft, ChevronRight, Search, Upload, Pencil, X, Clipboard, Check } from "lucide-react";
 import Link from "next/link";
 import SerialDecode from "@/components/SerialDecode";
 import SaveUpload from "@/components/SaveUpload";
@@ -55,7 +55,26 @@ export default function ItemsPage() {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS);
+  const [copiedSerial, setCopiedSerial] = useState<string | null>(null);
+  const serialColRef = useRef<HTMLTableCellElement>(null);
+  const [serialColWidth, setSerialColWidth] = useState(0);
 
+  useEffect(() => {
+    if (!serialColRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setSerialColWidth(entry.contentRect.width + 24);
+      }
+    });
+    observer.observe(serialColRef.current);
+    return () => observer.disconnect();
+  }, [loading]);
+
+  const copySerial = (serial: string) => {
+    navigator.clipboard.writeText(serial);
+    setCopiedSerial(serial);
+    setTimeout(() => setCopiedSerial(null), 1500);
+  };
 
   const fetchItems = useCallback(async () => {
     setLoading(true);
@@ -170,10 +189,13 @@ export default function ItemsPage() {
         ) : (
           <>
             <div className={styles.tableWrapper}>
-              <table className={styles.table}>
+              <table
+                className={styles.table}
+                style={{ "--serial-col-width": `${serialColWidth}px` } as React.CSSProperties}
+              >
                 <thead>
                   <tr>
-                    <th className={styles.frozenCol1}>Serial</th>
+                    <th className={styles.frozenCol1} ref={serialColRef}>Serial</th>
                     <th className={styles.frozenCol2}>Name</th>
                     <th>Type</th>
                     <th>Manufacturer</th>
@@ -191,7 +213,23 @@ export default function ItemsPage() {
                       data-rarity={item.rarity?.toLowerCase()}
                     >
                       <td className={styles.frozenCol1}>
-                        <code className={styles.serial}>{item.serial}</code>
+                        <div className={styles.serialCell}>
+                          <code className={styles.serial}>{item.serial}</code>
+                          <button
+                            className={styles.copyButton}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              copySerial(item.serial);
+                            }}
+                            title="Copy serial"
+                          >
+                            {copiedSerial === item.serial ? (
+                              <Check size={12} />
+                            ) : (
+                              <Clipboard size={12} />
+                            )}
+                          </button>
+                        </div>
                       </td>
                       <td className={styles.frozenCol2}>
                         <span className={styles.itemName}>
