@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { ArrowLeft, Loader2, ChevronLeft, ChevronRight, Search, Upload, Pencil } from "lucide-react";
+import { ArrowLeft, Loader2, ChevronLeft, ChevronRight, Search, Upload, Pencil, X } from "lucide-react";
 import Link from "next/link";
 import SerialDecode from "@/components/SerialDecode";
 import SaveUpload from "@/components/SaveUpload";
@@ -29,7 +29,21 @@ interface ListItemsResponse {
   offset: number;
 }
 
-const ITEMS_PER_PAGE = 25;
+interface Filters {
+  manufacturer: string;
+  weapon_type: string;
+  element: string;
+  rarity: string;
+}
+
+const ITEMS_PER_PAGE = 50;
+
+const EMPTY_FILTERS: Filters = {
+  manufacturer: "",
+  weapon_type: "",
+  element: "",
+  rarity: "",
+};
 
 export default function ItemsPage() {
   const [items, setItems] = useState<Item[]>([]);
@@ -40,14 +54,23 @@ export default function ItemsPage() {
   const [decodeOpen, setDecodeOpen] = useState(false);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
+  const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS);
+  const [expandedSerial, setExpandedSerial] = useState<string | null>(null);
 
   const fetchItems = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(
-        `${API_BASE}/items?limit=${ITEMS_PER_PAGE}&offset=${offset}`
-      );
+      const params = new URLSearchParams({
+        limit: String(ITEMS_PER_PAGE),
+        offset: String(offset),
+      });
+      if (filters.manufacturer) params.set("manufacturer", filters.manufacturer);
+      if (filters.weapon_type) params.set("weapon_type", filters.weapon_type);
+      if (filters.element) params.set("element", filters.element);
+      if (filters.rarity) params.set("rarity", filters.rarity);
+
+      const res = await fetch(`${API_BASE}/items?${params}`);
       if (!res.ok) throw new Error("Failed to fetch items");
       const data: ListItemsResponse = await res.json();
       setItems(data.items);
@@ -57,7 +80,7 @@ export default function ItemsPage() {
     } finally {
       setLoading(false);
     }
-  }, [offset]);
+  }, [offset, filters]);
 
   useEffect(() => {
     fetchItems();
@@ -65,6 +88,18 @@ export default function ItemsPage() {
 
   const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
   const currentPage = Math.floor(offset / ITEMS_PER_PAGE) + 1;
+
+  const hasFilters = Object.values(filters).some(Boolean);
+
+  const updateFilter = (key: keyof Filters, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setOffset(0);
+  };
+
+  const clearFilters = () => {
+    setFilters(EMPTY_FILTERS);
+    setOffset(0);
+  };
 
   return (
     <div className={styles.page}>
@@ -84,6 +119,43 @@ export default function ItemsPage() {
         </button>
       </header>
 
+      <div className={styles.filterBar}>
+        <input
+          type="text"
+          placeholder="Manufacturer"
+          value={filters.manufacturer}
+          onChange={(e) => updateFilter("manufacturer", e.target.value)}
+          className={styles.filterInput}
+        />
+        <input
+          type="text"
+          placeholder="Weapon Type"
+          value={filters.weapon_type}
+          onChange={(e) => updateFilter("weapon_type", e.target.value)}
+          className={styles.filterInput}
+        />
+        <input
+          type="text"
+          placeholder="Element"
+          value={filters.element}
+          onChange={(e) => updateFilter("element", e.target.value)}
+          className={styles.filterInput}
+        />
+        <input
+          type="text"
+          placeholder="Rarity"
+          value={filters.rarity}
+          onChange={(e) => updateFilter("rarity", e.target.value)}
+          className={styles.filterInput}
+        />
+        {hasFilters && (
+          <button className={styles.clearFilters} onClick={clearFilters}>
+            <X size={14} />
+            Clear
+          </button>
+        )}
+      </div>
+
       <main className={`${styles.main} ${decodeOpen ? styles.mainWithPanel : ""}`}>
         {loading ? (
           <div className={styles.loadingState}>
@@ -97,52 +169,83 @@ export default function ItemsPage() {
           </div>
         ) : (
           <>
-            <div className={styles.itemsList}>
-              {items.map((item) => (
-                <div
-                  key={item.serial}
-                  className={styles.itemCard}
-                  data-rarity={item.rarity?.toLowerCase()}
-                >
-                  <div className={styles.itemHeader}>
-                    <span className={styles.itemName}>
-                      {item.name || (item.item_type ? `Unknown ${item.item_type}` : "Unknown Item")}
-                    </span>
-                    <div className={styles.itemActions}>
-                      {item.level && (
-                        <span className={styles.itemLevel}>Lv.{item.level}</span>
-                      )}
-                      <button
-                        className={styles.editButton}
-                        onClick={() => setEditingItem(item)}
-                        title="Edit item"
-                      >
-                        <Pencil size={14} />
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles.itemMeta}>
-                    {item.manufacturer && (
-                      <span className={styles.tag}>{item.manufacturer}</span>
-                    )}
-                    {item.weapon_type && (
-                      <span className={styles.tag}>{item.weapon_type}</span>
-                    )}
-                    {item.element && (
-                      <span className={styles.tag} data-element={item.element.toLowerCase()}>
-                        {item.element}
-                      </span>
-                    )}
-                    {item.rarity && (
-                      <span className={styles.tag} data-rarity={item.rarity.toLowerCase()}>
-                        {item.rarity}
-                      </span>
-                    )}
-                  </div>
-                  <code className={styles.serial}>{item.serial}</code>
-                </div>
-              ))}
+            <div className={styles.tableWrapper}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Manufacturer</th>
+                    <th>Level</th>
+                    <th>Element</th>
+                    <th>Rarity</th>
+                    <th className={styles.actionsCol}></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {items.map((item) => (
+                    <tr
+                      key={item.serial}
+                      className={styles.row}
+                      data-rarity={item.rarity?.toLowerCase()}
+                      onClick={() =>
+                        setExpandedSerial(
+                          expandedSerial === item.serial ? null : item.serial
+                        )
+                      }
+                    >
+                      <td className={styles.nameCell}>
+                        <span className={styles.itemName}>
+                          {item.name || (item.item_type ? `Unknown ${item.item_type}` : "Unknown Item")}
+                        </span>
+                        {expandedSerial === item.serial && (
+                          <code className={styles.serial}>{item.serial}</code>
+                        )}
+                      </td>
+                      <td>{item.weapon_type || item.item_type || "\u2014"}</td>
+                      <td>{item.manufacturer || "\u2014"}</td>
+                      <td>{item.level ?? "\u2014"}</td>
+                      <td>
+                        {item.element ? (
+                          <span data-element={item.element.toLowerCase()}>
+                            {item.element}
+                          </span>
+                        ) : (
+                          "\u2014"
+                        )}
+                      </td>
+                      <td>
+                        {item.rarity ? (
+                          <span data-rarity={item.rarity.toLowerCase()}>
+                            {item.rarity}
+                          </span>
+                        ) : (
+                          "\u2014"
+                        )}
+                      </td>
+                      <td className={styles.actionsCol}>
+                        <button
+                          className={styles.editButton}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEditingItem(item);
+                          }}
+                          title="Edit item"
+                        >
+                          <Pencil size={14} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
+
+            {items.length === 0 && (
+              <div className={styles.emptyState}>
+                No items found{hasFilters ? " matching filters" : ""}.
+              </div>
+            )}
 
             <div className={styles.pagination}>
               <button

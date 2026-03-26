@@ -74,12 +74,61 @@
   box-shadow: 0 4px 12px rgba(245, 166, 35, 0.3);
 }
 
+/* Filter bar */
+.filterBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--card-border);
+  background: var(--code-bg);
+}
+
+.filterInput {
+  padding: 8px 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  color: var(--foreground);
+  font-size: 13px;
+  font-family: inherit;
+  width: 150px;
+  transition: border-color 0.2s;
+}
+
+.filterInput:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.filterInput::placeholder {
+  color: var(--text-secondary);
+}
+
+.clearFilters {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  background: transparent;
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.clearFilters:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 /* Main content */
 .main {
   flex: 1;
-  padding: 24px;
-  padding-bottom: 120px;
-  max-width: 1200px;
+  padding: 0 24px 120px;
+  max-width: 1400px;
   width: 100%;
   margin: 0 auto;
   transition: padding-bottom 0.3s ease;
@@ -90,7 +139,8 @@
 }
 
 .loadingState,
-.errorState {
+.errorState,
+.emptyState {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -119,72 +169,76 @@
   cursor: pointer;
 }
 
-/* Items list */
-.itemsList {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
+/* Table */
+.tableWrapper {
+  overflow-x: auto;
+  margin-top: 16px;
 }
 
-.itemCard {
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table thead {
+  position: sticky;
+  top: 65px;
+  z-index: 5;
+}
+
+.table th {
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  background: var(--background);
+  border-bottom: 1px solid var(--card-border);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--card-border);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.row {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.row:hover {
   background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 10px;
-  padding: 16px;
-  transition: border-color 0.2s, transform 0.2s;
 }
 
-.itemCard:hover {
-  border-color: var(--accent);
-  transform: translateY(-2px);
-}
-
-.itemCard[data-rarity="legendary"] {
-  border-left: 3px solid #ff9800;
-}
-
-.itemCard[data-rarity="epic"] {
-  border-left: 3px solid #9c27b0;
-}
-
-.itemCard[data-rarity="rare"] {
-  border-left: 3px solid #2196f3;
-}
-
-.itemCard[data-rarity="uncommon"] {
-  border-left: 3px solid #4caf50;
-}
-
-.itemCard[data-rarity="common"] {
-  border-left: 3px solid #9e9e9e;
-}
-
-.itemHeader {
+.nameCell {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 10px;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .itemName {
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 1.3;
+  font-weight: 500;
+  color: var(--foreground);
 }
 
-.itemActions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
+.serial {
+  font-size: 11px;
+  font-family: var(--font-geist-mono);
+  color: var(--text-secondary);
+  background: var(--code-bg);
+  padding: 3px 6px;
+  border-radius: 3px;
+  width: fit-content;
 }
 
-.itemLevel {
-  font-size: 13px;
-  color: var(--accent);
-  font-weight: 600;
-  white-space: nowrap;
+.actionsCol {
+  width: 40px;
 }
 
 .editButton {
@@ -193,8 +247,8 @@
   justify-content: center;
   width: 28px;
   height: 28px;
-  background: var(--code-bg);
-  border: 1px solid var(--card-border);
+  background: transparent;
+  border: 1px solid transparent;
   border-radius: 6px;
   color: var(--text-secondary);
   cursor: pointer;
@@ -202,7 +256,7 @@
   opacity: 0;
 }
 
-.itemCard:hover .editButton {
+.row:hover .editButton {
   opacity: 1;
 }
 
@@ -211,44 +265,19 @@
   color: var(--accent);
 }
 
-.itemMeta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 12px;
-}
+/* Element colors */
+[data-element="fire"] { color: #ff5722; }
+[data-element="shock"] { color: #03a9f4; }
+[data-element="corrosive"] { color: #8bc34a; }
+[data-element="cryo"] { color: #00bcd4; }
+[data-element="radiation"] { color: #ffeb3b; }
 
-.tag {
-  font-size: 12px;
-  padding: 3px 8px;
-  background: var(--code-bg);
-  border-radius: 4px;
-  color: var(--text-secondary);
-}
-
-.tag[data-element="fire"] { color: #ff5722; }
-.tag[data-element="shock"] { color: #03a9f4; }
-.tag[data-element="corrosive"] { color: #8bc34a; }
-.tag[data-element="cryo"] { color: #00bcd4; }
-.tag[data-element="radiation"] { color: #ffeb3b; }
-
-.tag[data-rarity="legendary"] { color: #ff9800; }
-.tag[data-rarity="epic"] { color: #ce93d8; }
-.tag[data-rarity="rare"] { color: #64b5f6; }
-.tag[data-rarity="uncommon"] { color: #81c784; }
-
-.serial {
-  display: block;
-  font-size: 11px;
-  font-family: var(--font-geist-mono);
-  color: var(--text-secondary);
-  background: var(--code-bg);
-  padding: 6px 8px;
-  border-radius: 4px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+/* Rarity colors */
+[data-rarity="legendary"] { color: #ff9800; }
+[data-rarity="epic"] { color: #ce93d8; }
+[data-rarity="rare"] { color: #64b5f6; }
+[data-rarity="uncommon"] { color: #81c784; }
+[data-rarity="common"] { color: #9e9e9e; }
 
 /* Pagination */
 .pagination {
@@ -256,7 +285,7 @@
   justify-content: center;
   align-items: center;
   gap: 16px;
-  padding: 32px 0;
+  padding: 24px 0;
 }
 
 .pagination button {
@@ -340,16 +369,28 @@
   }
 
   .main {
-    padding: 16px;
-    padding-bottom: 100px;
+    padding: 0 8px 100px;
   }
 
   .mainWithPanel {
     padding-bottom: calc(70vh + 40px);
   }
 
-  .itemsList {
-    grid-template-columns: 1fr;
+  .filterBar {
+    flex-wrap: wrap;
+    padding: 12px 16px;
+  }
+
+  .filterInput {
+    width: 100%;
+  }
+
+  .table {
+    font-size: 13px;
+  }
+
+  .editButton {
+    opacity: 1;
   }
 
   .decodeButton {
@@ -357,10 +398,6 @@
     right: 16px;
     left: 16px;
     justify-content: center;
-  }
-
-  .editButton {
-    opacity: 1;
   }
 }
 
